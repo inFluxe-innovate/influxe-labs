@@ -1,3 +1,3 @@
 # influxe-labs
 
-Home to the source code of some of our projects.
+A hub for the source code behind our innovative projects and experiments.

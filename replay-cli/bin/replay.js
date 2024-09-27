@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const { Command } = require('commander');
 const { recordSession } = require('../lib/record');
 const { replaySession } = require('../lib/replay');

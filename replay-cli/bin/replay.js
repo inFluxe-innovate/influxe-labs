@@ -18,7 +18,7 @@ if (!fs.existsSync(scriptsDir)) {
 
 // Set up the CLI with commander
 program
-  .version('1.0.1')
+  .version('1.0.3')
   .description('Replay CLI - Record and replay terminal command sequences');
 
 // Define the "record" command

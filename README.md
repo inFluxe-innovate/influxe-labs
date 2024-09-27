@@ -1,3 +1,3 @@
-# influxe-labs
-
-A hub for the source code behind our innovative projects and experiments.
+// Main file for ShadowDB
+# ShadowDB
+A mock database for testing and development that supports multiple databases.

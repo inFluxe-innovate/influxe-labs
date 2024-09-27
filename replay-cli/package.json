@@ -1,6 +1,6 @@
 {
   "name": "replay-cli",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "CLI tool to record and replay terminal command sequences with interactive options.",
   "main": "bin/replay.js",
   "bin": {

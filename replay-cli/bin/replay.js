@@ -6,7 +6,7 @@ const replay = require('../lib/replay');
 
 // Initialize the CLI program
 program
-  .version('1.0.0')
+  .version('2.0.0')
   .description('Replay CLI - Record and replay terminal command sequences');
 
 // Command to start recording

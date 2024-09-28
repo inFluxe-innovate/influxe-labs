@@ -1,44 +1,39 @@
 // src/index.js
 
-const MockDB = require('./databases/mockDb');
-const PostgresDB = require('./databases/postgresDb');
-const MongoDB = require('./databases/mongoDb');
-
 class ShadowDB {
-    constructor(type) {
-        this.type = type;
-        this.connect();
-    }
+  constructor(databaseType) {
+      this.databaseType = databaseType;
+      this.db = null;
 
-    connect() {
-        if (this.type === 'mock') {
-            this.db = new MockDB();
-        } else if (this.type === 'postgres') {
-            this.db = new PostgresDB();
-        } else if (this.type === 'mongo') {
-            this.db = new MongoDB();
-        } else {
-            throw new Error('Unsupported database type');
-        }
-    }
+      this.connect();
+  }
 
-    // Example method to add data
-    addData(collection, data) {
-        if (!this.db) {
-            throw new Error('Database not connected');
-        }
-        return this.db.addData(collection, data);
-    }
+  connect() {
+      if (this.databaseType === 'mock') {
+          this.db = new (require('./databases/mockDb'))();
+      } else if (this.databaseType === 'postgres') {
+          this.db = new (require('./databases/postgresDb'))();
+      } else if (this.databaseType === 'mongo') {
+          this.db = new (require('./databases/mongoDb'))();
+      } else {
+          throw new Error('Unsupported database type');
+      }
+  }
 
-    // Example method to retrieve data
-    getData(collection) {
-        if (!this.db) {
-            throw new Error('Database not connected');
-        }
-        return this.db.getData(collection);
-    }
+  addRecord(record) {
+      if (this.db && typeof this.db.addRecord === 'function') {
+          this.db.addRecord(record);
+      } else {
+          throw new Error('Database not initialized or addRecord method not defined');
+      }
+  }
 
-    // Additional methods for your database operations can be added here
+  findAll() {
+      if (this.db && typeof this.db.findAll === 'function') {
+          return this.db.findAll();
+      }
+      throw new Error('Database not initialized or findAll method not defined');
+  }
 }
 
 module.exports = ShadowDB;

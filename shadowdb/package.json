@@ -1,6 +1,6 @@
 {
     "name": "shadowdb",
-    "version": "1.0.0",
+    "version": "1.0.3",
     "description": "A mock database for testing and development that supports multiple databases.",
     "main": "src/index.js",
     "scripts": {

@@ -41,7 +41,20 @@ const db = new ShadowDB('mock');
 db.addRecord({ id: 1, name: 'Example Record' });
 
 // Retrieve all records
-console.log(db.db.findAll());
+console.log(db.findAll());
+
+// Update the record
+db.updateRecord(1, { name: 'Updated Record' });
+console.log(db.findAll());
+
+// Delete the record
+db.deleteRecord(1);
+console.log(db.findAll());
+
+// Clear all records
+db.clearRecords();
+console.log(db.findAll());
+
 ```
 
 ## API Documentation

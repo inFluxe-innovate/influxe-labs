@@ -1,19 +1,27 @@
 {
     "name": "shadowdb",
-    "version": "1.0.4",
+    "version": "1.0.0",
     "description": "A mock database for testing and development that supports multiple databases.",
     "main": "src/index.js",
     "scripts": {
-        "test": "jest"
+      "test": "jest"
     },
     "dependencies": {
-        "dotenv": "^10.0.0",
-        "mongodb": "^4.1.0",
-        "pg": "^8.7.1"
+      "dotenv": "^10.0.0",
+      "pg": "^8.7.1",
+      "mongodb": "^4.1.0"
     },
     "author": "inFluxe",
     "license": "MIT",
-    "devDependencies": {
-        "jest": "^29.7.0"
-    }
-}
+    "keywords": [
+      "mock",
+      "database",
+      "testing",
+      "development",
+      "nodejs",
+      "mongodb",
+      "postgresql",
+      "in-memory"
+    ]
+  }
+  

@@ -29,15 +29,9 @@ class MockDB {
       }
   }
 
-  findRecordById(id) {
-      const record = this.records.find(record => record.id === id);
-      if (!record) {
-          throw new Error('Record not found');
-      }
-      return record;
-  }
-
-  findRecordsByField(fieldName, value) {
-      return this.records.filter(record => record[fieldName] === value);
+  clearRecords() {
+      this.records = [];
   }
 }
+
+module.exports = MockDB;

@@ -69,7 +69,7 @@ console.log(db.search({ name: 'Updated Record 2' }));
 // Transactions
 db.beginTransaction();
 db.addRecord({ id: 4, name: 'Transaction Record' });
-db.commitTransaction(); // or db.rollbackTransaction();
+db.commit(); // or db.rollback();
 
 // Pagination & Sorting
 console.log(db.findAll({ page: 1, limit: 10, sortBy: 'name' }));
@@ -99,8 +99,8 @@ console.log(db.findAll({ page: 1, limit: 10, sortBy: 'name' }));
 #### Transactions
 
 - **beginTransaction()**: Starts a transaction.
-- **commitTransaction()**: Commits a transaction.
-- **rollbackTransaction()**: Rolls back a transaction.
+- **commit()**: Commits a transaction.
+- **rollback()**: Rolls back a transaction.
 
 #### Pagination & Sorting
 

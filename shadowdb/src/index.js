@@ -1,35 +1,61 @@
 class ShadowDB {
-  constructor(databaseType) {
-      this.connect(databaseType);
-  }
+    constructor(databaseType) {
+        this.databaseType = databaseType;
+        this.records = [];
 
-  connect(databaseType) {
-      if (databaseType === 'mock') {
-          this.db = new (require('./databases/mockDb'))();
-      } else {
-          throw new Error('Unsupported database type');
-      }
-  }
+        if (databaseType === 'mock') {
+            this.db = new (require('./databases/mockDb'))();
+        } else if (databaseType === 'postgres') {
+            this.db = new (require('./databases/postgresDb'))();
+        } else if (databaseType === 'mongo') {
+            this.db = new (require('./databases/mongoDb'))();
+        } else {
+            throw new Error('Unsupported database type');
+        }
+    }
 
-  addRecord(record) {
-      this.db.addRecord(record);
-  }
+    addRecord(record) {
+        this.records.push(record);
+        return record;
+    }
 
-  findAll() {
-      return this.db.findAll();
-  }
+    findRecord(id) {
+        return this.records.find(record => record.id === id);
+    }
 
-  updateRecord(id, newData) {
-      return this.db.updateRecord(id, newData);
-  }
+    findOne(query) {
+        return this.records.find(record => {
+            return Object.keys(query).every(key => record[key] === query[key]);
+        });
+    }
 
-  deleteRecord(id) {
-      return this.db.deleteRecord(id);
-  }
+    findMulti(query) {
+        return this.records.filter(record => {
+            return Object.keys(query).every(key => record[key] === query[key]);
+        });
+    }
 
-  clearRecords() {
-      return this.db.clearRecords();
-  }
+    deleteMulti(query) {
+        const originalLength = this.records.length;
+        this.records = this.records.filter(record => {
+            return !Object.keys(query).every(key => record[key] === query[key]);
+        });
+        return originalLength - this.records.length; // Number of records deleted
+    }
+
+    updateRecord(id, updatedRecord) {
+        const index = this.records.findIndex(record => record.id === id);
+        if (index !== -1) {
+            this.records[index] = updatedRecord;
+            return updatedRecord;
+        } else {
+            throw new Error('Record not found');
+        }
+    }
+
+    findAll() {
+        return this.records;
+    }
 }
 
 module.exports = ShadowDB;

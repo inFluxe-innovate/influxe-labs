@@ -79,49 +79,125 @@ console.log(db.findAll({ page: 1, limit: 10, sortBy: 'name' }));
 
 ### Core Methods
 
-- **addRecord(record)**: Adds a new record to the database.
-- **findAll(options)**: Retrieves all records, optionally with pagination and sorting.
-- **updateRecord(id, newData)**: Updates a specific record by ID.
-- **deleteRecord(id)**: Deletes a specific record by ID.
-- **clearRecords()**: Removes all records from the database.
+- **`addRecord(record)`**: Adds a new record to the database.
+
+  ```javascript
+  db.addRecord({ id: 1, name: 'New Record' });
+  ```
+
+- **`findAll(options)`**: Retrieves all records, optionally with pagination and sorting.
+
+  ```javascript
+  db.findAll({ page: 1, limit: 10 });
+  ```
+
+- **`updateRecord(id, newData)`**: Updates a specific record by ID.
+
+  ```javascript
+  db.updateRecord(1, { name: 'Updated Record' });
+  ```
+
+- **`deleteRecord(id)`**: Deletes a specific record by ID.
+
+  ```javascript
+  db.deleteRecord(1);
+  ```
+
+- **`clearRecords()`**: Removes all records from the database.
+
+  ```javascript
+  db.clearRecords();
+  ```
 
 ### New Features
 
 #### Batch Operations
 
-- **batchAdd(records)**: Add multiple records at once.
-- **batchUpdate(records)**: Update multiple records simultaneously.
+- **`batchAdd(records)`**: Add multiple records at once.
+
+  ```javascript
+  db.batchAdd([{ id: 2, name: 'Record 2' }, { id: 3, name: 'Record 3' }]);
+  ```
+
+- **`batchUpdate(records)`**: Update multiple records simultaneously.
+
+  ```javascript
+  db.batchUpdate([{ id: 2, name: 'Updated Record 2' }, { id: 3, name: 'Updated Record 3' }]);
+  ```
 
 #### Search Functionality
 
-- **search(criteria)**: Filter records based on specific criteria.
+- **`search(criteria)`**: Filter records based on specific criteria.
+
+  ```javascript
+  db.search({ name: 'Updated Record 2' });
+  ```
 
 #### Transactions
 
-- **beginTransaction()**: Starts a transaction.
-- **commit()**: Commits a transaction.
-- **rollback()**: Rolls back a transaction.
+- **`beginTransaction()`**: Starts a transaction.
+
+  ```javascript
+  db.beginTransaction();
+  ```
+
+- **`commit()`**: Commits a transaction.
+
+  ```javascript
+  db.commit();
+  ```
+
+- **`rollback()`**: Rolls back a transaction.
+
+  ```javascript
+  db.rollback();
+  ```
 
 #### Pagination & Sorting
 
-- **findAll({ page, limit, sortBy })**: Retrieve records with pagination and sorting.
+- **`findAll({ page, limit, sortBy })`**: Retrieve records with pagination and sorting.
+
+  ```javascript
+  db.findAll({ page: 1, limit: 10, sortBy: 'name' });
+  ```
 
 #### Event System
 
-- **on(event, callback)**: Listen for database events (e.g., 'add', 'update', 'delete').
+- **`on(event, callback)`**: Listen for database events (e.g., 'add', 'update', 'delete').
+
+  ```javascript
+  db.on('add', (record) => console.log('Record added:', record));
+  ```
 
 #### Data Validation
 
-- **addRecord(record, { validate: true })**: Validate records before adding or updating.
+- **`addRecord(record, { validate: true })`**: Validate records before adding or updating.
+
+  ```javascript
+  db.addRecord({ id: 5, name: 'Validated Record' }, { validate: true });
+  ```
 
 #### Logging & Configuration
 
-- **setLogging(level)**: Configure logging levels (e.g., 'info', 'warn', 'error').
-- **configure(options)**: Set custom configurations like validation rules and logging.
+- **`setLogging(level)`**: Configure logging levels (e.g., 'info', 'warn', 'error').
+
+  ```javascript
+  db.setLogging('info');
+  ```
+
+- **`configure(options)`**: Set custom configurations like validation rules and logging.
+
+  ```javascript
+  db.configure({ logging: true, validate: true });
+  ```
 
 #### Migration Support
 
-- **migrateData(targetDatabase)**: Migrate data between different database types.
+- **`migrateData(targetDatabase)`**: Migrate data between different database types.
+
+  ```javascript
+  db.migrateData('postgres');
+  ```
 
 ## License
 

@@ -1,60 +1,119 @@
 class ShadowDB {
     constructor(databaseType) {
         this.databaseType = databaseType;
-        this.records = [];
+        this.db = [];
+        this.transactions = [];
+        this.loggingEnabled = true;
+    }
 
-        if (databaseType === 'mock') {
-            this.db = new (require('./databases/mockDb'))();
-        } else if (databaseType === 'postgres') {
-            this.db = new (require('./databases/postgresDb'))();
-        } else if (databaseType === 'mongo') {
-            this.db = new (require('./databases/mongoDb'))();
-        } else {
-            throw new Error('Unsupported database type');
+    log(message) {
+        if (this.loggingEnabled) {
+            console.log(`[LOG]: ${message}`);
         }
     }
 
     addRecord(record) {
-        this.records.push(record);
-        return record;
+        this.validateRecord(record);
+        this.db.push(record);
+        this.log(`Record added: ${JSON.stringify(record)}`);
     }
 
-    findRecord(id) {
-        return this.records.find(record => record.id === id);
+    batchAdd(records) {
+        records.forEach(record => this.addRecord(record));
+    }
+
+    findAll(page = 1, limit = 10) {
+        const startIndex = (page - 1) * limit;
+        return this.db.slice(startIndex, startIndex + limit);
     }
 
     findOne(query) {
-        return this.records.find(record => {
-            return Object.keys(query).every(key => record[key] === query[key]);
-        });
+        return this.db.find(record => Object.keys(query).every(key => record[key] === query[key])) || null;
     }
 
     findMulti(query) {
-        return this.records.filter(record => {
-            return Object.keys(query).every(key => record[key] === query[key]);
-        });
+        return this.db.filter(record => Object.keys(query).every(key => record[key] === query[key]));
     }
 
-    deleteMulti(query) {
-        const originalLength = this.records.length;
-        this.records = this.records.filter(record => {
-            return !Object.keys(query).every(key => record[key] === query[key]);
-        });
-        return originalLength - this.records.length; // Number of records deleted
-    }
-
-    updateRecord(id, updatedRecord) {
-        const index = this.records.findIndex(record => record.id === id);
-        if (index !== -1) {
-            this.records[index] = updatedRecord;
-            return updatedRecord;
-        } else {
-            throw new Error('Record not found');
+    updateRecord(id, newData) {
+        const recordIndex = this.db.findIndex(record => record.id === id);
+        if (recordIndex !== -1) {
+            this.db[recordIndex] = { ...this.db[recordIndex], ...newData };
+            this.log(`Record updated: ${JSON.stringify(this.db[recordIndex])}`);
         }
     }
 
-    findAll() {
-        return this.records;
+    batchUpdate(updates) {
+        updates.forEach(update => {
+            this.updateRecord(update.id, update.data);
+        });
+    }
+
+    deleteRecord(id) {
+        this.db = this.db.filter(record => record.id !== id);
+        this.log(`Record deleted: ${id}`);
+    }
+
+    deleteMulti(query) {
+        const toDelete = this.findMulti(query);
+        this.db = this.db.filter(record => !toDelete.includes(record));
+        this.log(`Deleted records matching query: ${JSON.stringify(query)}`);
+    }
+
+    clearRecords() {
+        this.db = [];
+        this.log('All records cleared.');
+    }
+
+    validateRecord(record) {
+        // Implement your validation logic here
+        if (!record.id || !record.name) {
+            throw new Error('Record must have an id and a name.');
+        }
+    }
+
+    search(criteria) {
+        return this.db.filter(record => Object.keys(criteria).some(key => record[key] && record[key].toString().includes(criteria[key])));
+    }
+
+    beginTransaction() {
+        this.transactions.push([]);
+        this.log('Transaction started.');
+    }
+
+    commit() {
+        if (this.transactions.length > 0) {
+            this.transactions.pop();
+            this.log('Transaction committed.');
+        } else {
+            throw new Error('No transaction to commit.');
+        }
+    }
+
+    rollback() {
+        if (this.transactions.length > 0) {
+            this.transactions.pop();
+            this.log('Transaction rolled back.');
+        } else {
+            throw new Error('No transaction to roll back.');
+        }
+    }
+
+    sort(field, order = 'asc') {
+        const sortedDb = [...this.db].sort((a, b) => {
+            if (a[field] < b[field]) return order === 'asc' ? -1 : 1;
+            if (a[field] > b[field]) return order === 'asc' ? 1 : -1;
+            return 0;
+        });
+        return sortedDb;
+    }
+
+    enableLogging() {
+        this.loggingEnabled = true;
+    }
+
+    disableLogging() {
+        this.loggingEnabled = false;
     }
 }
 
